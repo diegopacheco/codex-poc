@@ -73,3 +73,24 @@ CONS:
 
 ### Results
 
+
+OpenAI Codex in Action building NoSugar Coaching App <br/>
+<img src="result/openai-codex.png" width="600"> >
+
+Add Person <br/>
+<img src="result/add-person.png" width="600" >
+
+Add Team <br/>
+<img src="result/add-team.png" width="600" >
+
+List Teams <br/>
+<img src="result/teams.png" width="600" >
+
+Asign person to team <br/>
+<img src="result/asign.png" width="600" >
+
+Give Feedback <br/>
+<img src="result/give-feedback.png" width="600" >
+
+List Feedbacks <br/>
+<img src="result/feedback.png" width="600" >
