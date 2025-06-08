@@ -1,4 +1,4 @@
-# No Sugar Coaching 
+# NoSugar Coaching 
 
 A Simple Team Coaching App without sugar.
 
