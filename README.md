@@ -2,7 +2,14 @@
 
 A Simple Team Coaching App.
 
-<img src="logo-app.png" >
+<img src="logo-app.png" width="200">
+
+## Features
+
+* Create and manage team members
+* Assign members to teams
+* Provide feedback on team performance
+* Provide feedback on people performance
 
 ## How to run
 
