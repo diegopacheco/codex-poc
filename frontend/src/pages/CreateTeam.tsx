@@ -1,12 +1,19 @@
 import { useState } from 'react'
 import InputField from '../components/InputField'
+import { API_URL } from '../api'
 
 export default function CreateTeam({ onAdd }: { onAdd: (t: { name: string; logo: string }) => void }) {
   const [name, setName] = useState('')
   const [logo, setLogo] = useState('')
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onAdd({ name, logo })
+    const payload = { name, logo }
+    fetch(`${API_URL}/teams`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch(console.error)
+    onAdd(payload)
     setName('')
     setLogo('')
   }
