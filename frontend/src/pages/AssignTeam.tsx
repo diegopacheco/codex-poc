@@ -1,11 +1,20 @@
 import { useState } from 'react'
+import { API_URL } from '../api'
 
 export default function AssignTeam({ members, teams, onAssign }: { members: string[]; teams: string[]; onAssign: (m: string, t: string) => void }) {
   const [member, setMember] = useState(members[0] || '')
   const [team, setTeam] = useState(teams[0] || '')
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (member && team) onAssign(member, team)
+    if (member && team) {
+      const payload = { member, team }
+      fetch(`${API_URL}/assignments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).catch(console.error)
+      onAssign(member, team)
+    }
   }
   return (
     <form onSubmit={submit}>

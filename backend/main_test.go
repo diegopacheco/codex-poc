@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"gorm.io/driver/sqlite"
@@ -93,9 +94,16 @@ func TestFeedback(t *testing.T) {
 	// assign to create relation
 	performRequest(router, "POST", "/assignments", map[string]uint{"memberID": m.ID, "teamID": team.ID})
 
+	// post feedback
 	w := performRequest(router, "POST", "/feedbacks", map[string]interface{}{"content": "hi", "memberID": m.ID, "teamID": team.ID})
 	if w.Code != http.StatusOK {
 		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+
+	// get feedback list
+	list := performRequest(router, "GET", "/members/"+strconv.FormatUint(uint64(m.ID), 10)+"/feedbacks", nil)
+	if list.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", list.Code)
 	}
 }
 

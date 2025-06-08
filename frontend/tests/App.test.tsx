@@ -13,4 +13,5 @@ it('renders navigation links', () => {
   expect(getByText('Assign')).toBeInTheDocument()
   expect(getByText('Teams')).toBeInTheDocument()
   expect(getByText('Feedback')).toBeInTheDocument()
+  expect(getByText('View Feedback')).toBeInTheDocument()
 })

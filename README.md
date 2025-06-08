@@ -35,8 +35,15 @@ API endpoints:
 
 - `POST /members`
 - `GET /members`
+- `GET /members/{id}/feedbacks`
 - `POST /teams`
 - `GET /teams`
 - `POST /assignments`
 - `POST /feedbacks`
 - `GET /feedbacks`
+
+### Stack
+
+* Frontend: React, TypeScript, Bun and Vite
+* Backend: Go, Gin, Gorm, MySQL
+* Database: MySQL running in a Docker container

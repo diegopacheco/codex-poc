@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -42,6 +43,7 @@ type TeamWithMembers struct {
 
 func setupRouter(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	r.POST("/members", func(c *gin.Context) {
 		var m Member
@@ -117,6 +119,15 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 	r.GET("/feedbacks", func(c *gin.Context) {
 		var fs []Feedback
 		db.Find(&fs)
+		c.JSON(http.StatusOK, fs)
+	})
+
+	r.GET("/members/:id/feedbacks", func(c *gin.Context) {
+		var fs []Feedback
+		if err := db.Where("member_id = ?", c.Param("id")).Find(&fs).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 		c.JSON(http.StatusOK, fs)
 	})
 
