@@ -1,13 +1,22 @@
 import { useState } from 'react'
+import { API_URL } from '../api'
 
 export default function FeedbackPage({ members, teams, onSubmit }: { members: string[]; teams: string[]; onSubmit: (target: string, message: string) => void }) {
   const [target, setTarget] = useState('')
   const [message, setMessage] = useState('')
   const options = [...members, ...teams]
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (target && message) onSubmit(target, message)
-    setMessage('')
+    if (target && message) {
+      const payload = { target, message }
+      fetch(`${API_URL}/feedbacks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).catch(console.error)
+      onSubmit(target, message)
+      setMessage('')
+    }
   }
   return (
     <form onSubmit={submit}>

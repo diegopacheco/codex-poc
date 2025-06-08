@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import { Link, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import AddMember from './pages/AddMember'
 import CreateTeam from './pages/CreateTeam'
 import AssignTeam from './pages/AssignTeam'
 import FeedbackPage from './pages/FeedbackPage'
+import Header from './components/Header'
+import './App.css'
 
 type Member = { name: string; email: string; picture: string }
 type Team = { name: string; logo: string; members: string[] }
@@ -18,20 +20,17 @@ export default function App() {
   const memberNames = members.map(m => m.name)
   const teamNames = teams.map(t => t.name)
   return (
-    <>
-      <nav>
-        <Link to="/add-member">Add Member</Link>
-        <Link to="/create-team">Create Team</Link>
-        <Link to="/assign-team">Assign</Link>
-        <Link to="/feedback">Feedback</Link>
-      </nav>
-      <Routes>
+    <div className="app-container">
+      <Header />
+      <div className="app-content">
+        <Routes>
         <Route path="/add-member" element={<AddMember onAdd={addMember} />} />
         <Route path="/create-team" element={<CreateTeam onAdd={addTeam} />} />
         <Route path="/assign-team" element={<AssignTeam members={memberNames} teams={teamNames} onAssign={assign} />} />
         <Route path="/feedback" element={<FeedbackPage members={memberNames} teams={teamNames} onSubmit={feedback} />} />
         <Route path="*" element={<AddMember onAdd={addMember} />} />
-      </Routes>
-    </>
+        </Routes>
+      </div>
+    </div>
   )
 }
