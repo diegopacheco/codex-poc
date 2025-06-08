@@ -29,11 +29,27 @@ type Assignment struct {
 	TeamID   uint
 }
 
+// allows accepting either IDs or names
+type AssignmentInput struct {
+	Member   string
+	Team     string
+	MemberID uint
+	TeamID   uint
+}
+
 type Feedback struct {
 	gorm.Model
 	Content  string
 	MemberID *uint
 	TeamID   *uint
+}
+
+type FeedbackInput struct {
+	Target   string
+	Message  string
+	MemberID uint
+	TeamID   uint
+	Content  string
 }
 
 type TeamWithMembers struct {
@@ -93,11 +109,35 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 	})
 
 	r.POST("/assignments", func(c *gin.Context) {
-		var a Assignment
-		if c.BindJSON(&a) == nil {
+		var in AssignmentInput
+		if c.BindJSON(&in) == nil {
+			var a Assignment
+			if in.MemberID != 0 && in.TeamID != 0 {
+				a.MemberID = in.MemberID
+				a.TeamID = in.TeamID
+			} else {
+				if in.Member != "" {
+					var m Member
+					if err := db.Where("name = ?", in.Member).First(&m).Error; err == nil {
+						a.MemberID = m.ID
+					}
+				}
+				if in.Team != "" {
+					var t Team
+					if err := db.Where("name = ?", in.Team).First(&t).Error; err == nil {
+						a.TeamID = t.ID
+					}
+				}
+			}
 			db.Create(&a)
 			c.JSON(http.StatusOK, a)
 		}
+	})
+
+	r.GET("/assignments", func(c *gin.Context) {
+		var as []Assignment
+		db.Find(&as)
+		c.JSON(http.StatusOK, as)
 	})
 
 	r.DELETE("/assignments", func(c *gin.Context) {
@@ -109,9 +149,32 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 	})
 
 	r.POST("/feedbacks", func(c *gin.Context) {
-		var f Feedback
-		if c.BindJSON(&f) == nil {
-			db.Create(&f)
+		var in FeedbackInput
+		if c.BindJSON(&in) == nil {
+			var f Feedback
+			f.Content = in.Content
+			if f.Content == "" {
+				f.Content = in.Message
+			}
+			if in.MemberID != 0 {
+				f.MemberID = &in.MemberID
+			} else if in.Target != "" {
+				var m Member
+				if err := db.Where("name = ?", in.Target).First(&m).Error; err == nil {
+					f.MemberID = &m.ID
+				} else {
+					var t Team
+					if err := db.Where("name = ?", in.Target).First(&t).Error; err == nil {
+						f.TeamID = &t.ID
+					}
+				}
+			} else if in.TeamID != 0 {
+				f.TeamID = &in.TeamID
+			}
+			if err := db.Create(&f).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
 			c.JSON(http.StatusOK, f)
 		}
 	})
