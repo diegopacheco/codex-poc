@@ -47,3 +47,17 @@ API endpoints:
 * Frontend: React, TypeScript, Bun and Vite
 * Backend: Go, Gin, Gorm, MySQL
 * Database: MySQL running in a Docker container
+
+### Development
+
+This was build using `OpenAI CODEX` in less than `1 hour`.
+
+Notes on the experience:
+
+* It was very smooth
+* It make very few mistakes (so far)
+* It was very fast to open the PRs
+* Open PRs on github with MCP is a killer feature
+* I had some issues in parallel tasks, since some tasks was not done, I wish there was better way to describe dependencies.
+* Codex got me the frontend, backend and database using docker-compose
+* Offcourse I knew what I wanted and what I was doing.
