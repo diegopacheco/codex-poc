@@ -13,7 +13,7 @@ services:
   backend:
     build: ./backend
     environment:
-      DB_DSN: root:password@tcp(db:3306)/coaching?charset=utf8mb4&parseTime=True&loc=Local
+      DB_DSN: "root:password@tcp(db:3306)/coaching?charset=utf8mb4&parseTime=True&loc=Local"
     depends_on:
       - db
     ports:

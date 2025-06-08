@@ -19,7 +19,7 @@ Start the entire stack with Docker Compose:
 ./start.sh
 ```
 
-them, open your browser and go to: [http://localhost:5173/](http://localhost:5173/)
+them, open your browser and go to: [http://localhost:5173/](http://localhost:5173/) <br/>
 
 The MySQL container stores its data in the `mysql_data` directory so it
 persists across restarts. This folder is ignored by git.
