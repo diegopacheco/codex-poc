@@ -2,7 +2,7 @@ import { useState } from 'react'
 import InputField from '../components/InputField'
 import { API_URL } from '../api'
 
-export default function AddMember({ onAdd }: { onAdd: (m: { name: string; email: string; picture: string }) => void }) {
+export default function AddMember({ onAdd, onSuccess }: { onAdd: (m: { name: string; email: string; picture: string }) => void; onSuccess?: () => void }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [picture, setPicture] = useState('')
@@ -15,6 +15,7 @@ export default function AddMember({ onAdd }: { onAdd: (m: { name: string; email:
       body: JSON.stringify(payload),
     }).catch(console.error)
     onAdd(payload)
+    onSuccess && onSuccess()
     setName('')
     setEmail('')
     setPicture('')

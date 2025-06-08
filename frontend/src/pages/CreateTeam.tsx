@@ -2,7 +2,7 @@ import { useState } from 'react'
 import InputField from '../components/InputField'
 import { API_URL } from '../api'
 
-export default function CreateTeam({ onAdd }: { onAdd: (t: { name: string; logo: string }) => void }) {
+export default function CreateTeam({ onAdd, onSuccess }: { onAdd: (t: { name: string; logo: string }) => void; onSuccess?: () => void }) {
   const [name, setName] = useState('')
   const [logo, setLogo] = useState('')
   const submit = async (e: React.FormEvent) => {
@@ -14,6 +14,7 @@ export default function CreateTeam({ onAdd }: { onAdd: (t: { name: string; logo:
       body: JSON.stringify(payload),
     }).catch(console.error)
     onAdd(payload)
+    onSuccess && onSuccess()
     setName('')
     setLogo('')
   }
