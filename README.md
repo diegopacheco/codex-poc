@@ -69,6 +69,7 @@ CONS:
 * I had some issues in parallel tasks, since some tasks was not done, I wish there was better way to describe dependencies.
 * on the backend, it generate a single main.go with all the code (sure I could ask it for refactoring but it could have better default)
 * Backend is very poor on validations and error handling (sure I could ask it for that)
+* When I asked for this: `improve UI: load the logo: logo-app.png on top of the header.tsx` it freaked out completely and generated 3 binary files and fail to create the PR.
 
 ### Results
 
