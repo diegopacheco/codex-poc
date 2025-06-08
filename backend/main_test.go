@@ -14,7 +14,8 @@ import (
 )
 
 func setupTestDB(t *testing.T) *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
+	dsn := "file:" + t.Name() + "?mode=memory&cache=shared"
+	db, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{})
 	if err != nil {
 		t.Fatalf("failed to open db: %v", err)
 	}
@@ -149,5 +150,40 @@ func TestTeamMembersEndpoint(t *testing.T) {
 	w := performRequest(router, "GET", "/team-members", nil)
 	if w.Code != http.StatusOK {
 		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+}
+
+func TestAssignmentsEndpoint(t *testing.T) {
+	db := setupTestDB(t)
+	router := setupRouter(db)
+
+	mResp := performRequest(router, "POST", "/members", map[string]string{"name": "John"})
+	var m Member
+	json.Unmarshal(mResp.Body.Bytes(), &m)
+
+	tResp := performRequest(router, "POST", "/teams", map[string]string{"name": "T1"})
+	var team Team
+	json.Unmarshal(tResp.Body.Bytes(), &team)
+
+	w := performRequest(router, "POST", "/assignments", map[string]string{"member": "John", "team": "T1"})
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+
+	w = performRequest(router, "GET", "/assignments", nil)
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+	var as []Assignment
+	json.Unmarshal(w.Body.Bytes(), &as)
+	found := false
+	for _, a := range as {
+		if a.MemberID == m.ID && a.TeamID == team.ID {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Fatalf("assignment not stored correctly")
 	}
 }

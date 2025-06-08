@@ -45,6 +45,7 @@ API endpoints:
 - `POST /teams`
 - `GET /teams`
 - `POST /assignments`
+- `GET /assignments`
 - `POST /feedbacks`
 - `GET /feedbacks`
 
