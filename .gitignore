@@ -25,3 +25,5 @@ replay_pid*
 
 # backend binary
 backend/app
+# local MySQL data directory
+mysql_data/
