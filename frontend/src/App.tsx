@@ -7,6 +7,7 @@ import FeedbackPage from './pages/FeedbackPage'
 import TeamList from './pages/TeamList'
 import ViewFeedback from './pages/ViewFeedback'
 import Header from './components/Header'
+import Toast from './components/Toast'
 import './App.css'
 
 type Member = { name: string; email: string; picture: string }
@@ -16,6 +17,12 @@ export default function App() {
   const [members, setMembers] = useState<Member[]>([])
   const [teams, setTeams] = useState<Team[]>([])
   const [feedbacks, setFeedbacks] = useState<{ target: string; message: string }[]>([])
+  const [toast, setToast] = useState('')
+
+  const showToast = (msg: string) => {
+    setToast(msg)
+    setTimeout(() => setToast(''), 5000)
+  }
 
   const addMember = (m: Member) => setMembers([...members, m])
   const addTeam = (t: { name: string; logo: string }) =>
@@ -44,13 +51,14 @@ export default function App() {
   return (
     <div className="app-container">
       <Header />
+      <Toast message={toast} />
       <div className="app-content">
         <Routes>
-          <Route path="/add-member" element={<AddMember onAdd={addMember} />} />
-          <Route path="/create-team" element={<CreateTeam onAdd={addTeam} />} />
+          <Route path="/add-member" element={<AddMember onAdd={addMember} onSuccess={() => showToast('Success')} />} />
+          <Route path="/create-team" element={<CreateTeam onAdd={addTeam} onSuccess={() => showToast('Success')} />} />
           <Route
             path="/assign-team"
-            element={<AssignTeam members={memberNames} teams={teamNames} onAssign={assign} />}
+            element={<AssignTeam members={memberNames} teams={teamNames} onAssign={assign} onSuccess={() => showToast('Success')} />}
           />
           <Route
             path="/teams"
@@ -58,13 +66,13 @@ export default function App() {
           />
           <Route
             path="/feedback"
-            element={<FeedbackPage members={memberNames} teams={teamNames} onSubmit={feedback} />}
+            element={<FeedbackPage members={memberNames} teams={teamNames} onSubmit={feedback} onSuccess={() => showToast('Success')} />}
           />
           <Route
             path="/view-feedback"
             element={<ViewFeedback members={memberNames} feedbacks={feedbacks} />}
           />
-          <Route path="*" element={<AddMember onAdd={addMember} />} />
+          <Route path="*" element={<AddMember onAdd={addMember} onSuccess={() => showToast('Success')} />} />
         </Routes>
       </div>
     </div>

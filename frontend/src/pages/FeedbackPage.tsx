@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { API_URL } from '../api'
 
-export default function FeedbackPage({ members, teams, onSubmit }: { members: string[]; teams: string[]; onSubmit: (target: string, message: string) => void }) {
+export default function FeedbackPage({ members, teams, onSubmit, onSuccess }: { members: string[]; teams: string[]; onSubmit: (target: string, message: string) => void; onSuccess?: () => void }) {
   const [target, setTarget] = useState('')
   const [message, setMessage] = useState('')
   const options = [...members, ...teams]
@@ -15,6 +15,7 @@ export default function FeedbackPage({ members, teams, onSubmit }: { members: st
         body: JSON.stringify(payload),
       }).catch(console.error)
       onSubmit(target, message)
+      onSuccess && onSuccess()
       setMessage('')
     }
   }
