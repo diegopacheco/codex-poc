@@ -40,3 +40,4 @@ API endpoints:
 - `POST /assignments`
 - `POST /feedbacks`
 - `GET /feedbacks`
+- `GET /members/{id}/feedbacks`
