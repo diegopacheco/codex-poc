@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Route, Routes, Link } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import AddMember from './pages/AddMember'
 import CreateTeam from './pages/CreateTeam'
 import AssignTeam from './pages/AssignTeam'
@@ -44,14 +44,6 @@ export default function App() {
   return (
     <div className="app-container">
       <Header />
-      <nav>
-        <Link to="/add-member">Add Member</Link>
-        <Link to="/create-team">Create Team</Link>
-        <Link to="/assign-team">Assign</Link>
-        <Link to="/teams">Teams</Link>
-        <Link to="/feedback">Feedback</Link>
-        <Link to="/view-feedback">View Feedback</Link>
-      </nav>
       <div className="app-content">
         <Routes>
           <Route path="/add-member" element={<AddMember onAdd={addMember} />} />
