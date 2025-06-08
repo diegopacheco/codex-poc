@@ -1,12 +1,18 @@
 # Coaching Backend
 
-Start MySQL:
+Start the entire stack with Docker Compose:
+
+```
+./start.sh
+```
+
+If you prefer to run the backend manually, start only the database first:
 
 ```
 docker-compose up -d db
 ```
 
-Run the server:
+Then run the server locally:
 
 ```
 go run ./backend
