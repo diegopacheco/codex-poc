@@ -1,6 +1,7 @@
 .app-header {
   width: 200px;
-  background-color: #20232a;
+  background-color: #111;
+  color: #fff;
   padding: 1rem;
 }
 
@@ -23,5 +24,5 @@
 }
 
 .app-header a:hover {
-  background-color: #282c34;
+  background-color: #333;
 }
