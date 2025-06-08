@@ -1,4 +1,10 @@
-# Coaching Backend
+# Coaching 
+
+A Simple Team Coaching App.
+
+<img src="logo-app.png" >
+
+## How to run
 
 Start the entire stack with Docker Compose:
 
