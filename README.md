@@ -40,3 +40,9 @@ API endpoints:
 - `POST /assignments`
 - `POST /feedbacks`
 - `GET /feedbacks`
+
+### Stack
+
+* Frontend: React, TypeScript, Bun and Vite
+* Backend: Go, Gin, Gorm, MySQL
+* Database: MySQL running in a Docker container
