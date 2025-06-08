@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"gorm.io/driver/sqlite"
@@ -16,7 +17,7 @@ func setupTestDB(t *testing.T) *gorm.DB {
 	if err != nil {
 		t.Fatalf("failed to open db: %v", err)
 	}
-	err = db.AutoMigrate(&Member{}, &Team{}, &TeamMember{}, &Feedback{})
+	err = db.AutoMigrate(&Member{}, &Team{}, &Assignment{}, &Feedback{})
 	if err != nil {
 		t.Fatalf("failed to migrate: %v", err)
 	}
@@ -69,7 +70,7 @@ func TestAssignMember(t *testing.T) {
 	var team Team
 	json.Unmarshal(tResp.Body.Bytes(), &team)
 
-	w := performRequest(router, "POST", "/assign", map[string]uint{"memberID": m.ID, "teamID": team.ID})
+	w := performRequest(router, "POST", "/assignments", map[string]uint{"memberID": m.ID, "teamID": team.ID})
 	if w.Code != http.StatusOK {
 		t.Fatalf("expected status 200, got %d", w.Code)
 	}
@@ -90,10 +91,15 @@ func TestFeedback(t *testing.T) {
 	json.Unmarshal(tResp.Body.Bytes(), &team)
 
 	// assign to create relation
-	performRequest(router, "POST", "/assign", map[string]uint{"memberID": m.ID, "teamID": team.ID})
+	performRequest(router, "POST", "/assignments", map[string]uint{"memberID": m.ID, "teamID": team.ID})
 
-	w := performRequest(router, "POST", "/feedback", map[string]interface{}{"message": "hi", "memberID": m.ID, "teamID": team.ID})
+	w := performRequest(router, "POST", "/feedbacks", map[string]interface{}{"content": "hi", "memberID": m.ID, "teamID": team.ID})
 	if w.Code != http.StatusOK {
 		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+
+	list := performRequest(router, "GET", "/members/"+strconv.FormatUint(uint64(m.ID), 10)+"/feedbacks", nil)
+	if list.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", list.Code)
 	}
 }

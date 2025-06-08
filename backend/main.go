@@ -90,6 +90,15 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 		c.JSON(http.StatusOK, fs)
 	})
 
+	r.GET("/members/:id/feedbacks", func(c *gin.Context) {
+		var fs []Feedback
+		if err := db.Where("member_id = ?", c.Param("id")).Find(&fs).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, fs)
+	})
+
 	return r
 }
 
