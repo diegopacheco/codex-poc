@@ -19,6 +19,11 @@ Start the entire stack with Docker Compose:
 ./start.sh
 ```
 
+The MySQL container stores its data in the `mysql_data` directory so it
+persists across restarts. The `start.sh` script sets the `MYSQL_DATA_DIR`
+environment variable to an absolute path, ensuring Docker always mounts the
+same location. This folder is ignored by git.
+
 If you prefer to run the backend manually, start only the database first:
 
 ```
