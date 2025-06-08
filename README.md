@@ -61,3 +61,7 @@ Notes on the experience:
 * I had some issues in parallel tasks, since some tasks was not done, I wish there was better way to describe dependencies.
 * Codex got me the frontend, backend and database using docker-compose
 * Offcourse I knew what I wanted and what I was doing.
+* You can see all PRs here: https://github.com/diegopacheco/codex-poc/pulls?q=is%3Apr+is%3Aclosed
+
+### Results
+
