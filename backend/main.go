@@ -1,10 +1,12 @@
 package main
 
 import (
+	"net/http"
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"os"
 )
 
 type Member struct {
@@ -38,51 +40,65 @@ func main() {
 	if dsn == "" {
 		dsn = "root:password@tcp(127.0.0.1:3306)/coaching?charset=utf8mb4&parseTime=True&loc=Local"
 	}
-	db, _ := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic(err)
+	}
+
 	db.AutoMigrate(&Member{}, &Team{}, &Assignment{}, &Feedback{})
+
 	r := gin.Default()
+
 	r.POST("/members", func(c *gin.Context) {
 		var m Member
 		if c.BindJSON(&m) == nil {
 			db.Create(&m)
-			c.JSON(200, m)
+			c.JSON(http.StatusOK, m)
 		}
 	})
+
 	r.GET("/members", func(c *gin.Context) {
 		var ms []Member
 		db.Find(&ms)
-		c.JSON(200, ms)
+		c.JSON(http.StatusOK, ms)
 	})
+
 	r.POST("/teams", func(c *gin.Context) {
 		var t Team
 		if c.BindJSON(&t) == nil {
 			db.Create(&t)
-			c.JSON(200, t)
+			c.JSON(http.StatusOK, t)
 		}
 	})
+
 	r.GET("/teams", func(c *gin.Context) {
 		var ts []Team
 		db.Find(&ts)
-		c.JSON(200, ts)
+		c.JSON(http.StatusOK, ts)
 	})
+
 	r.POST("/assignments", func(c *gin.Context) {
 		var a Assignment
 		if c.BindJSON(&a) == nil {
 			db.Create(&a)
-			c.JSON(200, a)
+			c.JSON(http.StatusOK, a)
 		}
 	})
+
 	r.POST("/feedbacks", func(c *gin.Context) {
 		var f Feedback
 		if c.BindJSON(&f) == nil {
 			db.Create(&f)
-			c.JSON(200, f)
+			c.JSON(http.StatusOK, f)
 		}
 	})
+
 	r.GET("/feedbacks", func(c *gin.Context) {
 		var fs []Feedback
 		db.Find(&fs)
-		c.JSON(200, fs)
+		c.JSON(http.StatusOK, fs)
 	})
+
 	r.Run()
 }
