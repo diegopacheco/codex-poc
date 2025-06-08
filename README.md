@@ -54,14 +54,21 @@ This was build using `OpenAI CODEX` in less than `1 hour`.
 
 Notes on the experience:
 
+PROS:
+
 * It was very smooth
 * It make very few mistakes (so far)
 * It was very fast to open the PRs
 * Open PRs on github with MCP is a killer feature
-* I had some issues in parallel tasks, since some tasks was not done, I wish there was better way to describe dependencies.
 * Codex got me the frontend, backend and database using docker-compose
 * Offcourse I knew what I wanted and what I was doing.
 * You can see all PRs here: https://github.com/diegopacheco/codex-poc/pulls?q=is%3Apr+is%3Aclosed
+
+CONS:
+
+* I had some issues in parallel tasks, since some tasks was not done, I wish there was better way to describe dependencies.
+* on the backend, it generate a single main.go with all the code (sure I could ask it for refactoring but it could have better default)
+* Backend is very poor on validations and error handling (sure I could ask it for that)
 
 ### Results
 
