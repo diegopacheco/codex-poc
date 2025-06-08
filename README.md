@@ -62,6 +62,7 @@ PROS:
 * Open PRs on github with MCP is a killer feature
 * Codex got me the frontend, backend and database using docker-compose
 * Offcourse I knew what I wanted and what I was doing.
+* For `1h` of work, I got a lot of code and things done.
 * You can see all PRs here: https://github.com/diegopacheco/codex-poc/pulls?q=is%3Apr+is%3Aclosed
 
 CONS:
@@ -70,6 +71,13 @@ CONS:
 * on the backend, it generate a single main.go with all the code (sure I could ask it for refactoring but it could have better default)
 * Backend is very poor on validations and error handling (sure I could ask it for that)
 * When I asked for this: `improve UI: load the logo: logo-app.png on top of the header.tsx` it freaked out completely and generated 3 binary files and fail to create the PR. Also created a bug with a image(corrupted).
+* For 99.9% of the time for this POC I used codex on the browser with my GTP Plus subscription, however when I try with my openai api key in my machine and use codex CLI tool(to run local - instead of the cloud) https://github.com/openai/codex where I had the code there already I just asked: `What this project do?` Costed me:
+    * 5 openai API Requests
+    * 10,670 tokens
+    * $0.01
+    * Most of the anwsers was all in the README.md anyways <br/>
+
+Botton line: I think it is worth it, but can easily be expensive if you are not careful.
 
 ### Results
 
