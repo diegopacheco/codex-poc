@@ -1,5 +1,3 @@
-import React from 'react'
-
 type Team = { name: string; logo: string; members: string[] }
 
 export default function TeamList({ teams, onRemove, onDelete }: { teams: Team[]; onRemove: (team: string, member: string) => void; onDelete: (member: string) => void }) {
