@@ -35,6 +35,11 @@ type Feedback struct {
 	TeamID   *uint
 }
 
+type TeamWithMembers struct {
+	Team    Team
+	Members []Member
+}
+
 func setupRouter(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
 
@@ -52,6 +57,13 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 		c.JSON(http.StatusOK, ms)
 	})
 
+	r.DELETE("/members/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		db.Delete(&Member{}, id)
+		db.Where("member_id = ?", id).Delete(&Assignment{})
+		c.Status(http.StatusOK)
+	})
+
 	r.POST("/teams", func(c *gin.Context) {
 		var t Team
 		if c.BindJSON(&t) == nil {
@@ -66,11 +78,31 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 		c.JSON(http.StatusOK, ts)
 	})
 
+	r.GET("/team-members", func(c *gin.Context) {
+		var ts []Team
+		db.Find(&ts)
+		var result []TeamWithMembers
+		for _, t := range ts {
+			var members []Member
+			db.Joins("JOIN assignments ON assignments.member_id = members.id").Where("assignments.team_id = ?", t.ID).Find(&members)
+			result = append(result, TeamWithMembers{Team: t, Members: members})
+		}
+		c.JSON(http.StatusOK, result)
+	})
+
 	r.POST("/assignments", func(c *gin.Context) {
 		var a Assignment
 		if c.BindJSON(&a) == nil {
 			db.Create(&a)
 			c.JSON(http.StatusOK, a)
+		}
+	})
+
+	r.DELETE("/assignments", func(c *gin.Context) {
+		var a Assignment
+		if c.BindJSON(&a) == nil {
+			db.Where("member_id = ? AND team_id = ?", a.MemberID, a.TeamID).Delete(&Assignment{})
+			c.Status(http.StatusOK)
 		}
 	})
 
