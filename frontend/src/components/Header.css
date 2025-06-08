@@ -9,6 +9,11 @@
   padding: 1rem;
 }
 
+.header-logo {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
 .app-header ul {
   list-style: none;
   padding: 0;
