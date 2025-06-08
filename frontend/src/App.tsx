@@ -4,6 +4,7 @@ import AddMember from './pages/AddMember'
 import CreateTeam from './pages/CreateTeam'
 import AssignTeam from './pages/AssignTeam'
 import FeedbackPage from './pages/FeedbackPage'
+import TeamList from './pages/TeamList'
 import ViewFeedback from './pages/ViewFeedback'
 import Header from './components/Header'
 import './App.css'
@@ -23,6 +24,17 @@ export default function App() {
     setTeams(teams.map(team =>
       team.name === t ? { ...team, members: [...team.members, m] } : team
     ))
+  const remove = (t: string, m: string) =>
+    setTeams(teams.map(team =>
+      team.name === t ? { ...team, members: team.members.filter(mem => mem !== m) } : team
+    ))
+  const delMember = (m: string) => {
+    setMembers(members.filter(mem => mem.name !== m))
+    setTeams(teams.map(team => ({
+      ...team,
+      members: team.members.filter(mem => mem !== m)
+    })))
+  }
   const feedback = (target: string, message: string) =>
     setFeedbacks([...feedbacks, { target, message }])
 
@@ -36,6 +48,7 @@ export default function App() {
         <Link to="/add-member">Add Member</Link>
         <Link to="/create-team">Create Team</Link>
         <Link to="/assign-team">Assign</Link>
+        <Link to="/teams">Teams</Link>
         <Link to="/feedback">Feedback</Link>
         <Link to="/view-feedback">View Feedback</Link>
       </nav>
@@ -46,6 +59,10 @@ export default function App() {
           <Route
             path="/assign-team"
             element={<AssignTeam members={memberNames} teams={teamNames} onAssign={assign} />}
+          />
+          <Route
+            path="/teams"
+            element={<TeamList teams={teams} onRemove={remove} onDelete={delMember} />}
           />
           <Route
             path="/feedback"

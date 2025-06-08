@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -93,13 +94,60 @@ func TestFeedback(t *testing.T) {
 	// assign to create relation
 	performRequest(router, "POST", "/assignments", map[string]uint{"memberID": m.ID, "teamID": team.ID})
 
+	// post feedback
 	w := performRequest(router, "POST", "/feedbacks", map[string]interface{}{"content": "hi", "memberID": m.ID, "teamID": team.ID})
 	if w.Code != http.StatusOK {
 		t.Fatalf("expected status 200, got %d", w.Code)
 	}
 
+	// get feedback list
 	list := performRequest(router, "GET", "/members/"+strconv.FormatUint(uint64(m.ID), 10)+"/feedbacks", nil)
 	if list.Code != http.StatusOK {
 		t.Fatalf("expected status 200, got %d", list.Code)
+	}
+}
+
+func TestRemoveAndDeleteMember(t *testing.T) {
+	db := setupTestDB(t)
+	router := setupRouter(db)
+
+	mResp := performRequest(router, "POST", "/members", map[string]string{"name": "John"})
+	var m Member
+	json.Unmarshal(mResp.Body.Bytes(), &m)
+
+	tResp := performRequest(router, "POST", "/teams", map[string]string{"name": "T1"})
+	var team Team
+	json.Unmarshal(tResp.Body.Bytes(), &team)
+
+	performRequest(router, "POST", "/assignments", map[string]uint{"memberID": m.ID, "teamID": team.ID})
+
+	w := performRequest(router, "DELETE", "/assignments", Assignment{MemberID: m.ID, TeamID: team.ID})
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+
+	w = performRequest(router, "DELETE", "/members/"+fmt.Sprint(m.ID), nil)
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+}
+
+func TestTeamMembersEndpoint(t *testing.T) {
+	db := setupTestDB(t)
+	router := setupRouter(db)
+
+	mResp := performRequest(router, "POST", "/members", map[string]string{"name": "John"})
+	var m Member
+	json.Unmarshal(mResp.Body.Bytes(), &m)
+
+	tResp := performRequest(router, "POST", "/teams", map[string]string{"name": "T1"})
+	var team Team
+	json.Unmarshal(tResp.Body.Bytes(), &team)
+
+	performRequest(router, "POST", "/assignments", map[string]uint{"memberID": m.ID, "teamID": team.ID})
+
+	w := performRequest(router, "GET", "/team-members", nil)
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
 	}
 }
