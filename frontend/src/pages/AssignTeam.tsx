@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { API_URL } from '../api'
 
-export default function AssignTeam({ members, teams, onAssign }: { members: string[]; teams: string[]; onAssign: (m: string, t: string) => void }) {
+export default function AssignTeam({ members, teams, onAssign, onSuccess }: { members: string[]; teams: string[]; onAssign: (m: string, t: string) => void; onSuccess?: () => void }) {
   const [member, setMember] = useState(members[0] || '')
   const [team, setTeam] = useState(teams[0] || '')
   const submit = async (e: React.FormEvent) => {
@@ -14,6 +14,7 @@ export default function AssignTeam({ members, teams, onAssign }: { members: stri
         body: JSON.stringify(payload),
       }).catch(console.error)
       onAssign(member, team)
+      onSuccess && onSuccess()
     }
   }
   return (
