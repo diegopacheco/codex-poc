@@ -35,13 +35,7 @@ type Feedback struct {
 	TeamID   uint
 }
 
-func main() {
-	dsn := os.Getenv("MYSQL_DSN")
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-	db.AutoMigrate(&Member{}, &Team{}, &TeamMember{}, &Feedback{})
+func setupRouter(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
 	r.POST("/members", func(c *gin.Context) {
 		var m Member
@@ -71,5 +65,16 @@ func main() {
 			c.JSON(http.StatusOK, f)
 		}
 	})
+	return r
+}
+
+func main() {
+	dsn := os.Getenv("MYSQL_DSN")
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic(err)
+	}
+	db.AutoMigrate(&Member{}, &Team{}, &TeamMember{}, &Feedback{})
+	r := setupRouter(db)
 	r.Run()
 }
