@@ -35,19 +35,7 @@ type Feedback struct {
 	TeamID   *uint
 }
 
-func main() {
-	dsn := os.Getenv("DB_DSN")
-	if dsn == "" {
-		dsn = "root:password@tcp(127.0.0.1:3306)/coaching?charset=utf8mb4&parseTime=True&loc=Local"
-	}
-
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-
-	db.AutoMigrate(&Member{}, &Team{}, &Assignment{}, &Feedback{})
-
+func setupRouter(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
 
 	r.POST("/members", func(c *gin.Context) {
@@ -100,5 +88,22 @@ func main() {
 		c.JSON(http.StatusOK, fs)
 	})
 
+	return r
+}
+
+func main() {
+	dsn := os.Getenv("DB_DSN")
+	if dsn == "" {
+		dsn = "root:password@tcp(127.0.0.1:3306)/coaching?charset=utf8mb4&parseTime=True&loc=Local"
+	}
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic(err)
+	}
+
+	db.AutoMigrate(&Member{}, &Team{}, &Assignment{}, &Feedback{})
+
+	r := setupRouter(db)
 	r.Run()
 }

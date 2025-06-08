@@ -1,0 +1,99 @@
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+)
+
+func setupTestDB(t *testing.T) *gorm.DB {
+	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
+	if err != nil {
+		t.Fatalf("failed to open db: %v", err)
+	}
+	err = db.AutoMigrate(&Member{}, &Team{}, &TeamMember{}, &Feedback{})
+	if err != nil {
+		t.Fatalf("failed to migrate: %v", err)
+	}
+	return db
+}
+
+func performRequest(r http.Handler, method, path string, body interface{}) *httptest.ResponseRecorder {
+	var buf bytes.Buffer
+	if body != nil {
+		json.NewEncoder(&buf).Encode(body)
+	}
+	req, _ := http.NewRequest(method, path, &buf)
+	req.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	return w
+}
+
+func TestCreateMember(t *testing.T) {
+	db := setupTestDB(t)
+	router := setupRouter(db)
+
+	w := performRequest(router, "POST", "/members", map[string]string{"name": "John"})
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+}
+
+func TestCreateTeam(t *testing.T) {
+	db := setupTestDB(t)
+	router := setupRouter(db)
+
+	w := performRequest(router, "POST", "/teams", map[string]string{"name": "T1"})
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+}
+
+func TestAssignMember(t *testing.T) {
+	db := setupTestDB(t)
+	router := setupRouter(db)
+
+	// create member
+	mResp := performRequest(router, "POST", "/members", map[string]string{"name": "John"})
+	var m Member
+	json.Unmarshal(mResp.Body.Bytes(), &m)
+
+	// create team
+	tResp := performRequest(router, "POST", "/teams", map[string]string{"name": "T1"})
+	var team Team
+	json.Unmarshal(tResp.Body.Bytes(), &team)
+
+	w := performRequest(router, "POST", "/assign", map[string]uint{"memberID": m.ID, "teamID": team.ID})
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+}
+
+func TestFeedback(t *testing.T) {
+	db := setupTestDB(t)
+	router := setupRouter(db)
+
+	// create member
+	mResp := performRequest(router, "POST", "/members", map[string]string{"name": "John"})
+	var m Member
+	json.Unmarshal(mResp.Body.Bytes(), &m)
+
+	// create team
+	tResp := performRequest(router, "POST", "/teams", map[string]string{"name": "T1"})
+	var team Team
+	json.Unmarshal(tResp.Body.Bytes(), &team)
+
+	// assign to create relation
+	performRequest(router, "POST", "/assign", map[string]uint{"memberID": m.ID, "teamID": team.ID})
+
+	w := performRequest(router, "POST", "/feedback", map[string]interface{}{"message": "hi", "memberID": m.ID, "teamID": team.ID})
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+}
