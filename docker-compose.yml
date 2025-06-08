@@ -7,7 +7,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      - "${MYSQL_DATA_DIR:-./mysql_data}:/var/lib/mysql"
 
   backend:
     build: ./backend
@@ -24,6 +24,3 @@ services:
       - backend
     ports:
       - "5173:5173"
-
-volumes:
-  mysql_data:
