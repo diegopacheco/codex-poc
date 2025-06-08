@@ -1,6 +1,6 @@
-# Coaching 
+# No Sugar Coaching 
 
-A Simple Team Coaching App.
+A Simple Team Coaching App without sugar.
 
 <img src="logo-app.png" width="200">
 
