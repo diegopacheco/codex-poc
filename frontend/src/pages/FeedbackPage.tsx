@@ -15,7 +15,7 @@ export default function FeedbackPage({ members, teams, onSubmit, onSuccess }: { 
         body: JSON.stringify(payload),
       }).catch(console.error)
       onSubmit(target, message)
-      onSuccess && onSuccess()
+      if (onSuccess) onSuccess()
       setMessage('')
     }
   }
