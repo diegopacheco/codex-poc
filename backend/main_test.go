@@ -187,3 +187,59 @@ func TestAssignmentsEndpoint(t *testing.T) {
 		t.Fatalf("assignment not stored correctly")
 	}
 }
+
+func TestMembersList(t *testing.T) {
+	db := setupTestDB(t)
+	router := setupRouter(db)
+
+	performRequest(router, "POST", "/members", map[string]string{"name": "John"})
+	performRequest(router, "POST", "/members", map[string]string{"name": "Jane"})
+
+	w := performRequest(router, "GET", "/members", nil)
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+	var ms []Member
+	json.Unmarshal(w.Body.Bytes(), &ms)
+	if len(ms) != 2 {
+		t.Fatalf("expected 2 members, got %d", len(ms))
+	}
+}
+
+func TestTeamsList(t *testing.T) {
+	db := setupTestDB(t)
+	router := setupRouter(db)
+
+	performRequest(router, "POST", "/teams", map[string]string{"name": "T1"})
+
+	w := performRequest(router, "GET", "/teams", nil)
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+	var ts []Team
+	json.Unmarshal(w.Body.Bytes(), &ts)
+	if len(ts) != 1 {
+		t.Fatalf("expected 1 team, got %d", len(ts))
+	}
+}
+
+func TestFeedbackList(t *testing.T) {
+	db := setupTestDB(t)
+	router := setupRouter(db)
+
+	mResp := performRequest(router, "POST", "/members", map[string]string{"name": "John"})
+	var m Member
+	json.Unmarshal(mResp.Body.Bytes(), &m)
+
+	performRequest(router, "POST", "/feedbacks", map[string]string{"target": "John", "message": "hello"})
+
+	w := performRequest(router, "GET", "/feedbacks", nil)
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", w.Code)
+	}
+	var fs []Feedback
+	json.Unmarshal(w.Body.Bytes(), &fs)
+	if len(fs) != 1 || fs[0].MemberID == nil || *fs[0].MemberID != m.ID {
+		t.Fatalf("feedback not stored correctly")
+	}
+}
