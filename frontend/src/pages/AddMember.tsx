@@ -15,7 +15,7 @@ export default function AddMember({ onAdd, onSuccess }: { onAdd: (m: { name: str
       body: JSON.stringify(payload),
     }).catch(console.error)
     onAdd(payload)
-    onSuccess && onSuccess()
+    if (onSuccess) onSuccess()
     setName('')
     setEmail('')
     setPicture('')

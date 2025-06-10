@@ -14,7 +14,7 @@ export default function AssignTeam({ members, teams, onAssign, onSuccess }: { me
         body: JSON.stringify(payload),
       }).catch(console.error)
       onAssign(member, team)
-      onSuccess && onSuccess()
+      if (onSuccess) onSuccess()
     }
   }
   return (

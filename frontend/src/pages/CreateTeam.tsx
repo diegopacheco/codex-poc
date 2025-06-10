@@ -14,7 +14,7 @@ export default function CreateTeam({ onAdd, onSuccess }: { onAdd: (t: { name: st
       body: JSON.stringify(payload),
     }).catch(console.error)
     onAdd(payload)
-    onSuccess && onSuccess()
+    if (onSuccess) onSuccess()
     setName('')
     setLogo('')
   }

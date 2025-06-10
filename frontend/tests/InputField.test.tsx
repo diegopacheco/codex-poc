@@ -10,3 +10,11 @@ it('calls onChange when typing', () => {
   fireEvent.change(input, { target: { value: 'John' } })
   expect(handle).toHaveBeenCalledWith('John')
 })
+
+it('renders type and placeholder', () => {
+  const { getByPlaceholderText } = render(
+    <InputField value="" onChange={() => {}} placeholder="Email" type="email" />
+  )
+  const input = getByPlaceholderText('Email') as HTMLInputElement
+  expect(input.type).toBe('email')
+})

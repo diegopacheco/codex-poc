@@ -29,10 +29,10 @@ export default function App() {
     const load = async () => {
       try {
         const mRes = await fetch(`${API_URL}/members`)
-        let memberMap: Record<number, string> = {}
+        const memberMap: Record<number, string> = {}
         if (mRes.ok) {
-          const ms = await mRes.json()
-          setMembers(ms.map((m: any) => {
+          const ms: { ID: number; Name: string; Email: string; Picture: string }[] = await mRes.json()
+          setMembers(ms.map(m => {
             memberMap[m.ID] = m.Name
             return {
               name: m.Name,
@@ -43,18 +43,18 @@ export default function App() {
         }
 
         const tRes = await fetch(`${API_URL}/team-members`)
-        let teamMap: Record<number, string> = {}
+        const teamMap: Record<number, string> = {}
         if (tRes.ok) {
-          const ts = await tRes.json()
-          const teams = ts.map((t: any) => {
+          const ts: { Team: { ID: number; Name: string; Logo: string }; Members: { ID: number; Name: string }[] }[] = await tRes.json()
+          const teams = ts.map(t => {
             teamMap[t.Team.ID] = t.Team.Name
-            t.Members.forEach((m: any) => {
+            t.Members.forEach(m => {
               memberMap[m.ID] = m.Name
             })
             return {
               name: t.Team.Name,
               logo: t.Team.Logo,
-              members: t.Members.map((m: any) => m.Name),
+              members: t.Members.map(m => m.Name),
             }
           })
           setTeams(teams)
@@ -62,8 +62,8 @@ export default function App() {
 
         const fRes = await fetch(`${API_URL}/feedbacks`)
         if (fRes.ok) {
-          const fs = await fRes.json()
-          setFeedbacks(fs.map((f: any) => ({
+          const fs: { MemberID: number; TeamID: number; Content: string }[] = await fRes.json()
+          setFeedbacks(fs.map(f => ({
             target: memberMap[f.MemberID] || teamMap[f.TeamID] || '',
             message: f.Content,
           })))
