@@ -109,3 +109,9 @@ Give Feedback <br/>
 
 List Feedbacks <br/>
 <img src="result/feedback.png" width="600" >
+
+### Related POCs
+
+* Anthropic Claude Code https://github.com/diegopacheco/claude-code-poc
+* Google Jules https://github.com/diegopacheco/google-jules-poc
+* Cursor POC https://github.com/diegopacheco/docker-cleanup
