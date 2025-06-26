@@ -115,3 +115,4 @@ List Feedbacks <br/>
 * Anthropic Claude Code https://github.com/diegopacheco/claude-code-poc
 * Google Jules https://github.com/diegopacheco/google-jules-poc
 * Cursor POC https://github.com/diegopacheco/docker-cleanup
+* Gemini-cli POC: https://github.com/diegopacheco/gemini-cli-poc
