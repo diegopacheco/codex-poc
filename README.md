@@ -117,3 +117,4 @@ List Feedbacks <br/>
 * Cursor POC https://github.com/diegopacheco/docker-cleanup
 * Gemini-cli POC: https://github.com/diegopacheco/gemini-cli-poc
 * Sketch POC: https://github.com/diegopacheco/sketch-dev-poc
+* Augument Code POC: https://github.com/diegopacheco/augmentcode-poc
