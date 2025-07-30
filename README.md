@@ -2,6 +2,8 @@
 
 A Simple Team Coaching App without sugar.
 
+Built with Codex: https://openai.com/codex/
+
 <img src="logo-app.png" width="200">
 
 ## Features
